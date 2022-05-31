@@ -1,0 +1,41 @@
+//BAD CODE
+class Customer{
+    int Type;
+
+    void Add(Database db)
+    {
+        if (Type == 0)
+        {
+            db.Add();
+        }
+        else
+        {
+            db.AddExistingCustomer();
+        }
+    }
+}
+
+//GOOD CODE
+
+class CustomerBetter{
+    void Add(Database db)
+    {
+        db.Add();
+    }
+}
+
+class ExistingCustomer : CustomerBetter
+{
+    override void Add(Database db)
+    {
+        db.AddExistingCustomer();
+    }
+}
+
+class AnotherCustomer : CustomerBetter
+{
+    override void Add(Database db)
+    {
+        db.AnotherExtension();
+    }
+}

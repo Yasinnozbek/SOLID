@@ -1,0 +1,69 @@
+//BAD CODE
+
+class FileLogger
+{
+    void Handle(string error)
+    {
+        File.WriteAllText(@"C:\Error.txt", error);
+    }
+}
+
+internal class Customer
+{
+    FileLogger logger = new FileLogger();
+
+    public void Add(Database db)
+    {
+        try
+        {
+            db.Add();
+        }
+        catch (Exception error)
+        {
+            logger.Handle(error.ToString());
+        }
+    }
+}
+
+//GOOD CODE
+
+class BetterCustomer
+{
+    ILogger logger;
+    BetterCustomer(ILogger logger)
+    {
+        this.logger = logger;
+    }
+
+    void Add(Database db)
+    {
+        try
+        {
+            db.Add();
+        }
+        catch (Exception error)
+        {
+            logger.Handle(error.ToString());
+        }
+    }
+}
+
+class EmailLogger : ILogger
+{
+    void Handle(string error)
+    {
+        File.WriteAllText(@"C:\Error.txt", error);
+    }
+}
+
+interface ILogger
+{
+    void Handle(string error);
+}
+
+
+void UseDependencyInjectionForLogger()
+{
+    var customer = new BetterCustomer(new EmailLogger());
+    customer.Add(new Database());
+}
